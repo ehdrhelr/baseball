@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team06.baseball.domain.Team;
+import team06.baseball.dto.ApiResult;
 import team06.baseball.repository.TeamsRepository;
 
 import java.util.List;
@@ -24,17 +25,17 @@ public class TeamsController {
     }
 
     @GetMapping("/{id}")
-    public String getTeam(@PathVariable Long id) {
+    public ApiResult<Team> getTeam(@PathVariable Long id) {
         Team team = teamsRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException(id + "팀이 없습니다."));
         logger.info(team.toString());
-        return team.toString();
+        return ApiResult.succeed(team);
     }
 
-    @GetMapping("/")
-    public String getTeams() {
+    @GetMapping
+    public ApiResult<List<Team>> getTeams() {
         List<Team> teams = (List<Team>) teamsRepository.findAll();
         logger.info(teams.toString());
-        return teams.toString();
+        return ApiResult.succeed(teams);
     }
 }
