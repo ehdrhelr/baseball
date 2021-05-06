@@ -9,8 +9,4 @@ public class Player {
     private Long teamId;
     private String name;
     private String position;
-    private Integer atBat;
-    private Integer hit;
-    private Integer out;
-    private Integer pitch;
 }

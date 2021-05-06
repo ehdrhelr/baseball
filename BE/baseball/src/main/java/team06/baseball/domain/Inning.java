@@ -15,4 +15,5 @@ public class Inning {
     private boolean base1;
     private boolean base2;
     private boolean base3;
+    private Integer score;
 }

@@ -9,5 +9,7 @@ public class Offense {
     private Long teamId;
     private Long inningId;
     private Long playerId;
-    private Integer score;
+    private Integer atBat;
+    private Integer hit;
+    private Integer out;
 }

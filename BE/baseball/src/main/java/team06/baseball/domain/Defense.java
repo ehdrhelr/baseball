@@ -9,4 +9,5 @@ public class Defense {
     private Long teamId;
     private Long inningId;
     private Long playerId;
+    private Integer pitch;
 }
