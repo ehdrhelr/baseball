@@ -45,5 +45,18 @@ team-06 (default)
 - iOS 진행 상황 - [dev/iOS](https://github.com/ehdrhelr/baseball/tree/dev/iOS)
 
 
+### 회의록
+
+1. 2시 전체 회의
+2. 5시 전체 회의
+3. iOS 수시 모임
+
+- 회의 방향성: 짧고 간결하게! 필요한 말만!
+
+전체 | iOS
+-- | --
+[5월 3일](https://github.com/ehdrhelr/baseball/wiki/5월-3일-전체-회의록) | [5월 3일](https://github.com/ehdrhelr/baseball/wiki/5월-3일-iOS-회의록)
+[5월 4일](https://github.com/ehdrhelr/baseball/wiki/5월-4일-전체-회의록) | [5월 4일](https://github.com/ehdrhelr/baseball/wiki/5월-4일-iOS-회의)
+[5월 6일](https://github.com/ehdrhelr/baseball/wiki/5월-6일-전체-회의)| [5월 6일](https://github.com/ehdrhelr/baseball/wiki/5월-6일-iOS-회의)
 
 ### [팀 Wiki](https://github.com/ehdrhelr/baseball/wiki)
