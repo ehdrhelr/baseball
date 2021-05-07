@@ -2,6 +2,10 @@
 
 온라인 대결이 가능한 간단한 야구 게임 앱 제작 프로젝트
 
+### 현재 개발 상황
+
+<img src="https://user-images.githubusercontent.com/72188416/117414261-e4287300-af51-11eb-9b86-d47b11659860.gif" width="350">
+
 
 ### 팀원 소개
 
