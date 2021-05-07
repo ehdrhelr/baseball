@@ -2,9 +2,11 @@ language: java
 jdk:
   - openjdk11
 
+# safelist
 branches:
   only:
     - feature/BE/api
+    - stable
 
 # Travis CI 서버의 Home
 cache:
