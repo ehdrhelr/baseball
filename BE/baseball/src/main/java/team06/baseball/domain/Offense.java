@@ -11,5 +11,4 @@ public class Offense {
     private Long playerId;
     private Integer atBat;
     private Integer hit;
-    private Integer out;
 }

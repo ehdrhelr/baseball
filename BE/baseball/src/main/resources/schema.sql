@@ -116,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `baseball`.`offense` (
     `player_id` BIGINT NOT NULL,
     `atBat` INT NULL DEFAULT 0,
     `hit` INT NULL DEFAULT 0,
-    `out` INT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     INDEX `offense_inning_id_fk_idx` (`inning_id` ASC),
     INDEX `offense_team_id_fk_idx` (`team_id` ASC),

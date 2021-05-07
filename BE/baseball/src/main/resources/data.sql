@@ -21,6 +21,7 @@ INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '이�
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '류현진', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '최동수', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '한양범', '타자');
+INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '나투수', '투수');
 
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '시온', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '롤로', '타자');
@@ -31,4 +32,11 @@ INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '다�
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '라라', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '마마', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '바바', '타자');
+INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '최동원', '투수');
 
+INSERT INTO `baseball`.`inning` (`game_id`, `round`, `top_bottom`, `out`, `strike`, `ball`, `base1`, `base2`, `base3`, `score`) VALUES (1, 2, 'top', 2, 3, 2, 1, 0, 0, 1);
+INSERT INTO `baseball`.`inning` (`game_id`, `round`, `top_bottom`, `out`, `strike`, `ball`, `base1`, `base2`, `base3`, `score`) VALUES (1, 2, 'bottom', 2, 3, 2, 1, 0, 0, 5);
+
+INSERT INTO `baseball`.`defense` (`team_id`, `inning_id`, `player_id`, `pitch`) VALUES (2, 1, 20, 39);
+
+INSERT INTO `baseball`.`offense` (`team_id`, `inning_id`, `player_id`, `atBat`, `hit`) VALUES(1, 1, 7, 1, 0);
