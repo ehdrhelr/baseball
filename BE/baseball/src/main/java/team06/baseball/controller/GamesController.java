@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team06.baseball.dto.ApiResult;
-import team06.baseball.dto.GamesResponseDto;
+import team06.baseball.dto.response.GameStartResponseDto;
+import team06.baseball.dto.response.GamesResponseDto;
 import team06.baseball.service.GamesService;
+import team06.baseball.service.InningsService;
 
 import java.util.List;
 
@@ -15,9 +17,11 @@ import java.util.List;
 public class GamesController {
 
     private final GamesService gamesService;
+    private final InningsService inningsService;
 
-    public GamesController(GamesService gamesService) {
+    public GamesController(GamesService gamesService, InningsService inningsService) {
         this.gamesService = gamesService;
+        this.inningsService = inningsService;
     }
 
     @GetMapping
@@ -28,5 +32,16 @@ public class GamesController {
     @GetMapping("/{id}")
     public ApiResult<GamesResponseDto> getGame(@PathVariable Long id) {
         return ApiResult.succeed(gamesService.getGame(id));
+    }
+
+    /**
+     * 게임 시작은 게임id == 1, home 팀 marvel 선택 기준으로 진행한다.
+     * 게임이 시작되면 먼저 이닝이 추가된다.
+     *
+     * @return
+     */
+    @GetMapping("/start/{id}")
+    public ApiResult<GameStartResponseDto> startGame(@PathVariable Long id) {
+        return ApiResult.succeed(gamesService.startGame(id));
     }
 }

@@ -21,11 +21,11 @@ INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '이�
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '류현진', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '최동수', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '한양범', '타자');
-INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '나투수', '투수');
+INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (1, '리아', '투수');
 
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '시온', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '롤로', '타자');
-INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '리아', '타자');
+INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '사사', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '가가', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '나나', '타자');
 INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, '다다', '타자');

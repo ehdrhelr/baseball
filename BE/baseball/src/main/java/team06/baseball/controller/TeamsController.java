@@ -2,12 +2,10 @@ package team06.baseball.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import team06.baseball.domain.Team;
 import team06.baseball.dto.ApiResult;
+import team06.baseball.dto.request.TeamSelectRequestDto;
 import team06.baseball.repository.TeamsRepository;
 
 import java.util.List;
@@ -37,5 +35,11 @@ public class TeamsController {
         List<Team> teams = (List<Team>) teamsRepository.findAll();
         logger.info(teams.toString());
         return ApiResult.succeed(teams);
+    }
+
+    @PostMapping
+    public void selectTeam(TeamSelectRequestDto teamSelectRequestDto) {
+
+
     }
 }
