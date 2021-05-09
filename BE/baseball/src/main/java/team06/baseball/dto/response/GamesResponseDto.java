@@ -1,4 +1,4 @@
-package team06.baseball.dto;
+package team06.baseball.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
