@@ -35,4 +35,35 @@ public class Inning {
     public void oneBall() {
         ball++;
     }
+
+    public void oneOut() {
+        out++;
+        this.strike = 0;
+        this.ball = 0;
+    }
+
+    public void runOneBase() {
+        if (!this.base1) {
+            base1 = true;
+        } else if (!this.base2) {
+            base2 = true;
+        } else if (!this.base3) {
+            base3 = true;
+        }
+
+        this.strike = 0;
+        this.ball = 0;
+    }
+
+    public boolean isThreeStrike() {
+        return strike == 3;
+    }
+
+    public boolean isThreeOut() {
+        return out == 3;
+    }
+
+    public boolean isFourBall() {
+        return ball == 4;
+    }
 }

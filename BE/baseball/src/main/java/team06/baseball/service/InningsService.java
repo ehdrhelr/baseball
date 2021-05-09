@@ -14,8 +14,6 @@ import team06.baseball.repository.InningsRepository;
 import team06.baseball.repository.PlayersRepository;
 import team06.baseball.repository.TeamsRepository;
 
-import java.util.Random;
-
 @Service
 public class InningsService {
 
@@ -65,16 +63,31 @@ public class InningsService {
         defenseRepository.save(defense);
         String log = "";
 
-
         String pitchResult = pitchResult();
 
         BallChangedResponseDto ballChangedResponseDto = null;
+        BaseChangedResponseDto baseChangedResponseDto = null;
+
+
         if (pitchResult.equals("스트라이크")) {
             inning.oneStrike();
             ballChangedResponseDto = BallChangedResponseDto.strike();
+            if (inning.isThreeStrike()) {
+                inning.oneOut();
+                pitchResult = "아웃";
+                ballChangedResponseDto = BallChangedResponseDto.out();
+            }
+            if(inning.isThreeOut()) {
+                // todo : 공수 교대
+            }
         } else {
             inning.oneBall();
             ballChangedResponseDto = BallChangedResponseDto.ball();
+            if (inning.isFourBall()) {
+                // 타자 진루
+                baseChangedResponseDto = BaseChangedResponseDto.of(inning);
+                inning.runOneBase();
+            }
         }
 
         log = inning.getStrike() + "-" + inning.getBall();
@@ -82,10 +95,17 @@ public class InningsService {
         NewPitchResponseDto newPitchResponseDto = NewPitchResponseDto
                 .of(defense.getPitch(), pitchResult, log);
 
+        /**
+         * todo :
+         * out 일때 타자 교체
+         * 3 out 일 때 공수 교대
+         * hit
+         * 점수 냈을 때 scoring 데이터 전달
+         */
 
         inningsRepository.save(inning);
 
-        return TotalPitchResultResponseDto.of(newPitchResponseDto, ballChangedResponseDto, null);
+        return TotalPitchResultResponseDto.of(newPitchResponseDto, ballChangedResponseDto, baseChangedResponseDto);
     }
 
     private String pitchResult() {

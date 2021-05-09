@@ -37,4 +37,13 @@ public class BallChangedResponseDto {
                 .out(1)
                 .build();
     }
+
+    public static BallChangedResponseDto runOneBase() {
+        return BallChangedResponseDto.builder()
+                .strike(0)
+                .ball(0)
+                .out(0)
+                .build();
+    }
+
 }
