@@ -42,17 +42,22 @@ public class Inning {
         this.ball = 0;
     }
 
-    public void runOneBase() {
+    public boolean runOneBase() {
+
+        this.strike = 0;
+        this.ball = 0;
+
         if (!this.base1) {
             base1 = true;
         } else if (!this.base2) {
             base2 = true;
         } else if (!this.base3) {
             base3 = true;
+        } else if (this.base3) {
+            score++;
+            return true;
         }
-
-        this.strike = 0;
-        this.ball = 0;
+        return false;
     }
 
     public boolean isThreeStrike() {

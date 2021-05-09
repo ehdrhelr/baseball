@@ -32,11 +32,11 @@ public class BaseChangedResponseDto {
         if (!inning.isBase1()) {
             first = BaseResponseDto.of(true, false);
         } else if (!inning.isBase2()) {
-            first = BaseResponseDto.of(true, false);
+            first = BaseResponseDto.of(true, true);
             second = BaseResponseDto.of(true, false);
         } else if (!inning.isBase3()) {
-            first = BaseResponseDto.of(true, false);
-            second = BaseResponseDto.of(true, false);
+            first = BaseResponseDto.of(true, true);
+            second = BaseResponseDto.of(true, true);
             third = BaseResponseDto.of(true, false);
         }
 
@@ -45,5 +45,14 @@ public class BaseChangedResponseDto {
                 .second(second)
                 .third(third)
                 .build();
+    }
+
+    public static BaseChangedResponseDto scoring() {
+        return BaseChangedResponseDto.builder()
+                .first(BaseResponseDto.of(true, true))
+                .second(BaseResponseDto.of(true, true))
+                .third(BaseResponseDto.of(true, true))
+                .build();
+
     }
 }

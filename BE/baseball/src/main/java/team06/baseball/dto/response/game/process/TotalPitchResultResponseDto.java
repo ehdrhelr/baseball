@@ -10,6 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TotalPitchResultResponseDto {
 
+    private ScoreResponseDto score;
     private NewPitchResponseDto newPitch;
     private BallChangedResponseDto ballChanged;
     private BaseChangedResponseDto baseChanged;
@@ -19,6 +20,19 @@ public class TotalPitchResultResponseDto {
             , BallChangedResponseDto ballChanged
             , BaseChangedResponseDto baseChanged) {
         return TotalPitchResultResponseDto.builder()
+                .newPitch(newPitch)
+                .ballChanged(ballChanged)
+                .baseChanged(baseChanged)
+                .build();
+    }
+
+    public static TotalPitchResultResponseDto of(
+            ScoreResponseDto score
+            , NewPitchResponseDto newPitch
+            , BallChangedResponseDto ballChanged
+            , BaseChangedResponseDto baseChanged) {
+        return TotalPitchResultResponseDto.builder()
+                .score(score)
                 .newPitch(newPitch)
                 .ballChanged(ballChanged)
                 .baseChanged(baseChanged)

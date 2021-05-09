@@ -5,10 +5,7 @@ import team06.baseball.domain.Defense;
 import team06.baseball.domain.Inning;
 import team06.baseball.domain.Player;
 import team06.baseball.domain.Team;
-import team06.baseball.dto.response.game.process.BallChangedResponseDto;
-import team06.baseball.dto.response.game.process.BaseChangedResponseDto;
-import team06.baseball.dto.response.game.process.NewPitchResponseDto;
-import team06.baseball.dto.response.game.process.TotalPitchResultResponseDto;
+import team06.baseball.dto.response.game.process.*;
 import team06.baseball.repository.DefenseRepository;
 import team06.baseball.repository.InningsRepository;
 import team06.baseball.repository.PlayersRepository;
@@ -65,9 +62,11 @@ public class InningsService {
 
         String pitchResult = pitchResult();
 
+        ScoreResponseDto scoreResponseDto = null;
         BallChangedResponseDto ballChangedResponseDto = null;
         BaseChangedResponseDto baseChangedResponseDto = null;
 
+        boolean scoring = false;
 
         if (pitchResult.equals("스트라이크")) {
             inning.oneStrike();
@@ -86,7 +85,11 @@ public class InningsService {
             if (inning.isFourBall()) {
                 // 타자 진루
                 baseChangedResponseDto = BaseChangedResponseDto.of(inning);
-                inning.runOneBase();
+                scoring = inning.runOneBase();
+                if (scoring) {
+                    scoreResponseDto = ScoreResponseDto.of(0, inning.getScore());
+                    baseChangedResponseDto = BaseChangedResponseDto.scoring();
+                }
             }
         }
 
@@ -100,12 +103,18 @@ public class InningsService {
          * out 일때 타자 교체
          * 3 out 일 때 공수 교대
          * hit
-         * 점수 냈을 때 scoring 데이터 전달
+         *
+         * 투구수 pitcher에 저장
+         * 타석 안타 현황 batter에 저장
+         *
          */
 
         inningsRepository.save(inning);
 
-        return TotalPitchResultResponseDto.of(newPitchResponseDto, ballChangedResponseDto, baseChangedResponseDto);
+        return TotalPitchResultResponseDto.of(scoreResponseDto
+                , newPitchResponseDto
+                , ballChangedResponseDto
+                , baseChangedResponseDto);
     }
 
     private String pitchResult() {
