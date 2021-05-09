@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team06.baseball.dto.ApiResult;
-import team06.baseball.dto.response.GameStartResponseDto;
+import team06.baseball.dto.response.game.process.TotalPitchResultResponseDto;
+import team06.baseball.dto.response.game.start.GameStartResponseDto;
 import team06.baseball.dto.response.GamesResponseDto;
 import team06.baseball.service.GamesService;
 import team06.baseball.service.InningsService;
@@ -40,8 +41,13 @@ public class GamesController {
      *
      * @return
      */
-    @GetMapping("/start/{id}")
+    @GetMapping("/{id}/start")
     public ApiResult<GameStartResponseDto> startGame(@PathVariable Long id) {
         return ApiResult.succeed(gamesService.startGame(id));
+    }
+
+    @GetMapping("/{id}/pitch")
+    public ApiResult<TotalPitchResultResponseDto> pitch(@PathVariable Long id) {
+        return ApiResult.succeed(inningsService.pitch(id));
     }
 }

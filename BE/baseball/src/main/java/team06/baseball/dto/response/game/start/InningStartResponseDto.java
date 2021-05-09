@@ -1,4 +1,4 @@
-package team06.baseball.dto.response;
+package team06.baseball.dto.response.game.start;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class InningStartResponseDto {
 
         return InningStartResponseDto.builder()
                 .counter(counter)
-                .isTop(topBottom.equals("TOP"))
+                .isTop(topBottom.equalsIgnoreCase("TOP"))
                 .build();
     }
 }

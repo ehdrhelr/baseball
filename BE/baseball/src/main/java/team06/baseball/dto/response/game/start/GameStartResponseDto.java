@@ -1,4 +1,4 @@
-package team06.baseball.dto.response;
+package team06.baseball.dto.response.game.start;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

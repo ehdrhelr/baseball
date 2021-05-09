@@ -13,6 +13,10 @@ public class Team {
     private String name;
     private String status;
 
+    public Long getId() {
+        return this.id;
+    }
+
     public String getTeam() {
         return this.name;
     }

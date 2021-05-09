@@ -2,8 +2,10 @@ package team06.baseball.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
+@ToString
 @Getter
 @NoArgsConstructor
 public class Inning {
@@ -23,6 +25,14 @@ public class Inning {
 
     public Inning(Long gameId) {
         this.gameId = gameId;
+        this.round = 1;
         this.topBottom = "BOTTOM";
+    }
+
+    public void oneStrike() {
+        strike++;
+    }
+    public void oneBall() {
+        ball++;
     }
 }

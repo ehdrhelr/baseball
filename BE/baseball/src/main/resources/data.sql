@@ -37,6 +37,4 @@ INSERT INTO `baseball`.`player` (`team_id`, `name`, `position`) VALUES (2, 'ìµœë
 INSERT INTO `baseball`.`inning` (`game_id`, `round`, `top_bottom`, `out`, `strike`, `ball`, `base1`, `base2`, `base3`, `score`) VALUES (1, 2, 'top', 2, 3, 2, 1, 0, 0, 1);
 INSERT INTO `baseball`.`inning` (`game_id`, `round`, `top_bottom`, `out`, `strike`, `ball`, `base1`, `base2`, `base3`, `score`) VALUES (1, 2, 'bottom', 2, 3, 2, 1, 0, 0, 5);
 
-INSERT INTO `baseball`.`defense` (`team_id`, `inning_id`, `player_id`, `pitch`) VALUES (2, 1, 20, 39);
-
 INSERT INTO `baseball`.`offense` (`team_id`, `inning_id`, `player_id`, `atBat`, `hit`) VALUES(1, 1, 7, 1, 0);
