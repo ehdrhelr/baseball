@@ -39,12 +39,6 @@ public class InningsService {
         this.offenseRepository = offenseRepository;
     }
 
-    /**
-     * Defense 만들고 inning 업데이트해서 new pitch dto 보낼 예정
-     *
-     * @param gameId
-     * @return
-     */
     public TotalPitchResultResponseDto pitch(Long gameId) {
         Inning inning = inningsRepository.findNewestInningByGameId(gameId);
         Game game = gamesRepository.findById(gameId)
@@ -62,10 +56,6 @@ public class InningsService {
         Team offenseTeam = teamsRepository.findById(offenseTeamId)
                 .orElseThrow(() -> new IllegalStateException("팀을 찾을 수 없습니다."));
         Player pitcher = playersRepository.findPlayingPitcherByTeamId(defenseTeam.getId());
-        /**
-         *  일단 한 팀이 한 게임만 한다고 가정
-         *  defense는 팀id, 이닝id, 플레이어id를 가짐
-         */
 
         Offense offense = offenseRepository.findByTeamIdAndInningIdAndOnTurn(
                 offenseTeamId, inning.getId());
@@ -75,7 +65,6 @@ public class InningsService {
                 .orElseThrow(() -> new IllegalStateException("해당 선수를 찾을 수 없습니다."));
 
         if (inning.isBatterChanged()) {
-            // todo : 다음 타자로 어떻게 바꿀지 생각해보자.
             int order = offense.getOrder();
             int nextOrder = order + 1;
             if (nextOrder == 10) {
@@ -136,7 +125,24 @@ public class InningsService {
                 Player newBatter = playersRepository.findById(startOffense.getPlayerId())
                         .orElseThrow(() -> new IllegalStateException());
                 Player newPitcher = playersRepository.findPlayingPitcherByTeamId(offenseTeamId);
-                defenseRepository.save(Defense.of(offenseTeamId, newInning.getId(), newPitcher.getId(), 0));
+
+                Integer pitch = defenseRepository.findBeforePitchByPlayerId(newPitcher.getId())
+                        .orElse(0);
+
+                defenseRepository.save(Defense.of(offenseTeamId, newInning.getId(), newPitcher.getId(), pitch));
+
+                int order = offense.getOrder();
+                int nextOrder = order + 1;
+                if (nextOrder == 10) {
+                    nextOrder = 1;
+                }
+
+                Offense nextOffense = offenseRepository.findByTeamIdAndInningIdAndOrder(
+                        offenseTeamId, inning.getId(), nextOrder);
+                offense.turnOff();
+                nextOffense.turnOn();
+                offenseRepository.save(offense);
+                offenseRepository.save(nextOffense);
 
                 newPitchResponseDto = NewPitchResponseDto.of(defense.getPitch(), pitchResult, log);
 
@@ -202,7 +208,7 @@ public class InningsService {
     private String pitchResult() {
         int rate = (int) (Math.random() * 10 + 1);
         System.out.println("rate : " + rate);
-        if (0 < rate && rate <= 5) {
+        if (0 < rate && rate <= 9) {
             return "스트라이크";
         }
         return "볼";
@@ -217,6 +223,4 @@ public class InningsService {
         return inningsRepository.findHomeTeamTotalScoreByGameId(gameId)
                 .orElse(0);
     }
-
-
 }

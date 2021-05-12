@@ -94,20 +94,32 @@ public class GamesService {
 
     protected void saveOffense(Long teamId, Long inningId) {
         List<Player> players = playersRepository.findBattersByTeamId(teamId);
+        Inning inning = inningsRepository.findById(inningId)
+                .orElseThrow(() -> new IllegalStateException());
+
         for (int i = 0; i < 9; i++) {
             int order = i + 1;
-            boolean onTurn = false;
-            if (i == 0) {
-                onTurn = true;
+            int beforeAtBat = offenseRepository.findBeforeAtBatByPlayerId(players.get(i).getId())
+                    .orElse(0);
+            int beforeHit = offenseRepository.findBeforeHitByPlayerId(players.get(i).getId())
+                    .orElse(0);
+            boolean beforeOnTurn = false;
+
+            if (inning.isGameStartInning() && i == 0) {
+                beforeOnTurn = true;
+            } else {
+                beforeOnTurn = offenseRepository.findBeforeOnTurnByPlayerId(players.get(i).getId())
+                        .orElse(false);;
             }
+
             Offense offense = Offense.of(
                     teamId
                     , inningId
                     , players.get(i).getId()
-                    , 0
-                    , 0
+                    , beforeAtBat
+                    , beforeHit
                     , order
-                    , onTurn);
+                    , beforeOnTurn);
             offenseRepository.save(offense);
         }
     }

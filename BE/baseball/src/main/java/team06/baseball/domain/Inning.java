@@ -81,4 +81,8 @@ public class Inning {
     public boolean isBatterChanged() {
         return strike == 0 && ball == 0 && out != 0;
     }
+
+    public boolean isGameStartInning() {
+        return round == 1;
+    }
 }
