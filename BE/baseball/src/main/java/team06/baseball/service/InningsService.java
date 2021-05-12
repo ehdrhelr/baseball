@@ -65,6 +65,8 @@ public class InningsService {
                 .orElseThrow(() -> new IllegalStateException("해당 선수를 찾을 수 없습니다."));
 
         if (inning.isBatterChanged()) {
+            inning.resetBallCount();
+
             int order = offense.getOrder();
             int nextOrder = order + 1;
             if (nextOrder == 10) {
@@ -96,7 +98,7 @@ public class InningsService {
 
         boolean scoring = false;
 
-        if (pitchResult.equals("스트라이크")) {
+        if ("스트라이크".equalsIgnoreCase(pitchResult)) {
             inning.oneStrike();
             ballChangedResponseDto = BallChangedResponseDto.strike();
             if (inning.isThreeStrike()) {
@@ -144,6 +146,8 @@ public class InningsService {
                 offenseRepository.save(offense);
                 offenseRepository.save(nextOffense);
 
+                log = inning.getStrike() + "-" + inning.getBall();
+
                 newPitchResponseDto = NewPitchResponseDto.of(defense.getPitch(), pitchResult, log);
 
                 return TotalPitchResultResponseDto.of(
@@ -155,6 +159,29 @@ public class InningsService {
                         , ballChangedResponseDto
                         , baseChangedResponseDto);
             }
+        } else if ("안타".equalsIgnoreCase(pitchResult)) {
+            // 타자 진루
+            baseChangedResponseDto = BaseChangedResponseDto.of(inning);
+            scoring = inning.runOneBase();
+
+            int homeTotalScore = getHomeTotalScore(gameId);
+            int awayTotalScore = getAwayTotalScore(gameId);
+
+            if (scoring) {
+                if ("TOP".equalsIgnoreCase(inning.getTopBottom())) { // 어웨이팀 득점
+                    awayTotalScore++;
+                } else {
+                    homeTotalScore++;
+                }
+                scoreResponseDto = ScoreResponseDto.of(homeTotalScore, awayTotalScore);
+                baseChangedResponseDto = BaseChangedResponseDto.scoring();
+            }
+            offense.setAtBat((offense.getAtBat() + 1));
+            offense.setHit((offense.getHit() + 1));
+
+            inning.hit();
+
+            offenseRepository.save(offense);
         } else {
             inning.oneBall();
             ballChangedResponseDto = BallChangedResponseDto.ball();
@@ -176,19 +203,6 @@ public class InningsService {
                     baseChangedResponseDto = BaseChangedResponseDto.scoring();
                 }
                 offense.setAtBat((offense.getAtBat() + 1));
-
-                int order = offense.getOrder();
-                int nextOrder = order + 1;
-                if (nextOrder == 10) {
-                    nextOrder = 1;
-                }
-
-                Offense nextOffense = offenseRepository.findByTeamIdAndInningIdAndOrder(
-                        offenseTeamId, inning.getId(), nextOrder);
-                offense.turnOff();
-                nextOffense.turnOn();
-                offenseRepository.save(offense);
-                offenseRepository.save(nextOffense);
                 offenseRepository.save(offense);
             }
         }
@@ -197,15 +211,6 @@ public class InningsService {
 
         newPitchResponseDto = NewPitchResponseDto
                 .of(defense.getPitch(), pitchResult, log);
-
-        /**
-         * todo:
-         * hit
-         *
-         * 타석 안타 현황 batter에 저장
-         *
-         */
-
         inningsRepository.save(inning);
 
         return TotalPitchResultResponseDto.of(
@@ -221,8 +226,10 @@ public class InningsService {
     private String pitchResult() {
         int rate = (int) (Math.random() * 10 + 1);
         System.out.println("rate : " + rate);
-        if (0 < rate && rate <= 3) {
+        if (0 < rate && rate <= 5) {
             return "스트라이크";
+        } else if (5 < rate && rate <= 6) {
+            return "안타";
         }
         return "볼";
     }

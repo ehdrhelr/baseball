@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `baseball`.`inning` (
     `base2` TINYINT(1) NOT NULL DEFAULT 0,
     `base3` TINYINT(1) NOT NULL DEFAULT 0,
     `score` INT NOT NULL,
+    `hit` TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     INDEX `game_id_fk_idx` (`game_id` ASC),
     CONSTRAINT `inning_game_id_fk`

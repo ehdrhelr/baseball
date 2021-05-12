@@ -22,6 +22,7 @@ public class Inning {
     private boolean base2;
     private boolean base3;
     private int score;
+    private boolean hit;
 
     public Inning(Long gameId) {
         this.gameId = gameId;
@@ -44,15 +45,9 @@ public class Inning {
 
     public void oneOut() {
         out++;
-        this.strike = 0;
-        this.ball = 0;
     }
 
     public boolean runOneBase() {
-
-        this.strike = 0;
-        this.ball = 0;
-
         if (!this.base1) {
             base1 = true;
         } else if (!this.base2) {
@@ -79,10 +74,24 @@ public class Inning {
     }
 
     public boolean isBatterChanged() {
-        return strike == 0 && ball == 0 && out != 0;
+        return isThreeStrike() || isFourBall() || isThreeOut() || isHit();
+    }
+
+    public void resetBallCount() {
+        this.strike = 0;
+        this.ball = 0;
+        resetHit();
     }
 
     public boolean isGameStartInning() {
         return round == 1;
+    }
+
+    public void hit() {
+        this.hit = true;
+    }
+
+    public void resetHit() {
+        this.hit = false;
     }
 }
