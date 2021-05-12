@@ -26,7 +26,7 @@ public class Inning {
     public Inning(Long gameId) {
         this.gameId = gameId;
         this.round = 1;
-        this.topBottom = "BOTTOM";
+        this.topBottom = "TOP";
     }
 
     public void oneStrike() {
@@ -70,5 +70,9 @@ public class Inning {
 
     public boolean isFourBall() {
         return ball == 4;
+    }
+
+    public boolean isBatterChanged() {
+        return strike == 0 && ball == 0 && out != 0;
     }
 }

@@ -17,7 +17,7 @@ public class InningStartResponseDto {
 
         return InningStartResponseDto.builder()
                 .counter(counter)
-                .isTop(topBottom.equalsIgnoreCase("TOP"))
+                .isTop("TOP".equalsIgnoreCase(topBottom))
                 .build();
     }
 }
