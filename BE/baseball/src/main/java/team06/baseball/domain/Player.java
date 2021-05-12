@@ -1,7 +1,11 @@
 package team06.baseball.domain;
 
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
+@ToString
+@Getter
 public class Player {
 
     @Id
@@ -9,8 +13,4 @@ public class Player {
     private Long teamId;
     private String name;
     private String position;
-    private Integer atBat;
-    private Integer hit;
-    private Integer out;
-    private Integer pitch;
 }
