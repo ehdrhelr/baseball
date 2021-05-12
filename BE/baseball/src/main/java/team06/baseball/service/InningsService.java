@@ -176,6 +176,19 @@ public class InningsService {
                     baseChangedResponseDto = BaseChangedResponseDto.scoring();
                 }
                 offense.setAtBat((offense.getAtBat() + 1));
+
+                int order = offense.getOrder();
+                int nextOrder = order + 1;
+                if (nextOrder == 10) {
+                    nextOrder = 1;
+                }
+
+                Offense nextOffense = offenseRepository.findByTeamIdAndInningIdAndOrder(
+                        offenseTeamId, inning.getId(), nextOrder);
+                offense.turnOff();
+                nextOffense.turnOn();
+                offenseRepository.save(offense);
+                offenseRepository.save(nextOffense);
                 offenseRepository.save(offense);
             }
         }
@@ -208,7 +221,7 @@ public class InningsService {
     private String pitchResult() {
         int rate = (int) (Math.random() * 10 + 1);
         System.out.println("rate : " + rate);
-        if (0 < rate && rate <= 9) {
+        if (0 < rate && rate <= 3) {
             return "스트라이크";
         }
         return "볼";
