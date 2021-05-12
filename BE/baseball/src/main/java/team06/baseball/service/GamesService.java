@@ -92,7 +92,7 @@ public class GamesService {
         return GameStartResponseDto.of(home, away, inning, batter, pitcher);
     }
 
-    private void saveOffense(Long teamId, Long inningId) {
+    protected void saveOffense(Long teamId, Long inningId) {
         List<Player> players = playersRepository.findBattersByTeamId(teamId);
         for (int i = 0; i < 9; i++) {
             int order = i + 1;

@@ -13,17 +13,25 @@ public class InningsService {
 
     private Logger logger = LoggerFactory.getLogger(InningsService.class);
 
+    private final GamesService gamesService;
+
+    private final GamesRepository gamesRepository;
     private final InningsRepository inningsRepository;
     private final TeamsRepository teamsRepository;
     private final PlayersRepository playersRepository;
     private final DefenseRepository defenseRepository;
     private final OffenseRepository offenseRepository;
 
-    public InningsService(InningsRepository inningsRepository
+    public InningsService(
+            GamesService gamesService
+            , GamesRepository gamesRepository
+            , InningsRepository inningsRepository
             , TeamsRepository teamsRepository
             , PlayersRepository playersRepository
             , DefenseRepository defenseRepository
             , OffenseRepository offenseRepository) {
+        this.gamesService = gamesService;
+        this.gamesRepository = gamesRepository;
         this.inningsRepository = inningsRepository;
         this.teamsRepository = teamsRepository;
         this.playersRepository = playersRepository;
@@ -39,12 +47,15 @@ public class InningsService {
      */
     public TotalPitchResultResponseDto pitch(Long gameId) {
         Inning inning = inningsRepository.findNewestInningByGameId(gameId);
-        // 이닝 초 : 홈 - 수비, 어웨이 - 공격 일때
-        Long offenseTeamId = 1L;
-        Long defenseTeamId = 2L;
+        Game game = gamesRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalStateException(gameId + "게임을 찾을 수 없습니다."));
+        Long homeTeamId = game.getHomeTeamId();
+        Long awayTeamId = game.getAwayTeamId();
+        Long offenseTeamId = awayTeamId;
+        Long defenseTeamId = homeTeamId;
         if ("BOTTOM".equalsIgnoreCase(inning.getTopBottom())) { // 이닝 말 : 홈 - 공격 , 어웨이 - 수비
-            offenseTeamId = 2L;
-            defenseTeamId = 1L;
+            offenseTeamId = homeTeamId;
+            defenseTeamId = awayTeamId;
         }
         Team defenseTeam = teamsRepository.findById(defenseTeamId)
                 .orElseThrow(() -> new IllegalStateException("팀을 찾을 수 없습니다."));
@@ -58,7 +69,7 @@ public class InningsService {
 
         Offense offense = offenseRepository.findByTeamIdAndInningIdAndOnTurn(
                 offenseTeamId, inning.getId());
-        Defense defense = defenseRepository.findByTeamId(defenseTeamId);
+        Defense defense = defenseRepository.findNewestDefenseByTeamId(defenseTeamId);
         logger.info("offense : {}", offense);
         Player batter = playersRepository.findById(offense.getPlayerId())
                 .orElseThrow(() -> new IllegalStateException("해당 선수를 찾을 수 없습니다."));
@@ -89,8 +100,10 @@ public class InningsService {
         String pitchResult = pitchResult();
 
         ScoreResponseDto scoreResponseDto = null;
+        NewPitchResponseDto newPitchResponseDto = null;
         BallChangedResponseDto ballChangedResponseDto = null;
         BaseChangedResponseDto baseChangedResponseDto = null;
+        InningChangedResponseDto inningChangedResponseDto = null;
 
         boolean scoring = false;
 
@@ -105,7 +118,36 @@ public class InningsService {
                 offenseRepository.save(offense);
             }
             if (inning.isThreeOut()) {
-                // todo : 공수 교대
+                int counter = inning.getRound();
+                String topBottom = inning.getTopBottom();
+                if (topBottom.equalsIgnoreCase("TOP")) {
+                    topBottom = "BOTTOM";
+
+                } else {
+                    topBottom = "TOP";
+                    counter++;
+                }
+                inningsRepository.save(new Inning(gameId, counter, topBottom));
+                Inning newInning = inningsRepository.findNewestInningByGameId(gameId);
+                inningChangedResponseDto = InningChangedResponseDto.of(counter, topBottom);
+
+                gamesService.saveOffense(defenseTeamId, newInning.getId());
+                Offense startOffense = offenseRepository.findByTeamIdAndInningIdAndOnTurn(defenseTeamId, newInning.getId());
+                Player newBatter = playersRepository.findById(startOffense.getPlayerId())
+                        .orElseThrow(() -> new IllegalStateException());
+                Player newPitcher = playersRepository.findPlayingPitcherByTeamId(offenseTeamId);
+                defenseRepository.save(Defense.of(offenseTeamId, newInning.getId(), newPitcher.getId(), 0));
+
+                newPitchResponseDto = NewPitchResponseDto.of(defense.getPitch(), pitchResult, log);
+
+                return TotalPitchResultResponseDto.of(
+                        inningChangedResponseDto
+                        , scoreResponseDto
+                        , PlayerStartResponseDto.of(newBatter.getName(), "백엔드 천재")
+                        , PlayerStartResponseDto.of(newPitcher.getName(), "iOS 천재")
+                        , newPitchResponseDto
+                        , ballChangedResponseDto
+                        , baseChangedResponseDto);
             }
         } else {
             inning.oneBall();
@@ -114,8 +156,17 @@ public class InningsService {
                 // 타자 진루
                 baseChangedResponseDto = BaseChangedResponseDto.of(inning);
                 scoring = inning.runOneBase();
+
+                int homeTotalScore = getHomeTotalScore(gameId);
+                int awayTotalScore = getAwayTotalScore(gameId);
+
                 if (scoring) {
-                    scoreResponseDto = ScoreResponseDto.of(0, inning.getScore());
+                    if ("TOP".equalsIgnoreCase(inning.getTopBottom())) { // 어웨이팀 득점
+                        awayTotalScore++;
+                    } else {
+                        homeTotalScore++;
+                    }
+                    scoreResponseDto = ScoreResponseDto.of(homeTotalScore, awayTotalScore);
                     baseChangedResponseDto = BaseChangedResponseDto.scoring();
                 }
                 offense.setAtBat((offense.getAtBat() + 1));
@@ -125,23 +176,22 @@ public class InningsService {
 
         log = inning.getStrike() + "-" + inning.getBall();
 
-        NewPitchResponseDto newPitchResponseDto = NewPitchResponseDto
+        newPitchResponseDto = NewPitchResponseDto
                 .of(defense.getPitch(), pitchResult, log);
 
         /**
-         * todo :
-         * out 일때 타자 교체
-         * 3 out 일 때 공수 교대
+         * todo:
          * hit
          *
-         * 투구수 pitcher에 저장
          * 타석 안타 현황 batter에 저장
          *
          */
 
         inningsRepository.save(inning);
 
-        return TotalPitchResultResponseDto.of(scoreResponseDto
+        return TotalPitchResultResponseDto.of(
+                inningChangedResponseDto
+                , scoreResponseDto
                 , PlayerStartResponseDto.of(batter.getName(), "백엔드 천재")
                 , PlayerStartResponseDto.of(pitcher.getName(), "iOS 천재")
                 , newPitchResponseDto
@@ -157,4 +207,16 @@ public class InningsService {
         }
         return "볼";
     }
+
+    private int getAwayTotalScore(Long gameId) {
+        return inningsRepository.findAwayTeamTotalScoreByGameId(gameId)
+                .orElse(0);
+    }
+
+    private int getHomeTotalScore(Long gameId) {
+        return inningsRepository.findHomeTeamTotalScoreByGameId(gameId)
+                .orElse(0);
+    }
+
+
 }

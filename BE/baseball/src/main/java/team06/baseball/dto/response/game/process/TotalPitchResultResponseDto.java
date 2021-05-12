@@ -11,7 +11,7 @@ import team06.baseball.dto.response.game.start.PlayerStartResponseDto;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TotalPitchResultResponseDto {
 
-
+    private InningChangedResponseDto inning;
     private ScoreResponseDto score;
     private PlayerStartResponseDto batter;
     private PlayerStartResponseDto pitcher;
@@ -31,13 +31,15 @@ public class TotalPitchResultResponseDto {
     }
 
     public static TotalPitchResultResponseDto of(
-            ScoreResponseDto score
+            InningChangedResponseDto inning
+            , ScoreResponseDto score
             , PlayerStartResponseDto batter
             , PlayerStartResponseDto pitcher
             , NewPitchResponseDto newPitch
             , BallChangedResponseDto ballChanged
             , BaseChangedResponseDto baseChanged) {
         return TotalPitchResultResponseDto.builder()
+                .inning(inning)
                 .score(score)
                 .batter(batter)
                 .pitcher(pitcher)

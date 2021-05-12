@@ -14,7 +14,6 @@ public class InningStartResponseDto {
 
 
     public static InningStartResponseDto of(int counter, String topBottom) {
-
         return InningStartResponseDto.builder()
                 .counter(counter)
                 .isTop("TOP".equalsIgnoreCase(topBottom))

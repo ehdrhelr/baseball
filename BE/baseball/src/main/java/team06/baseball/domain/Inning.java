@@ -29,6 +29,12 @@ public class Inning {
         this.topBottom = "TOP";
     }
 
+    public Inning(Long gameId, int round, String topBottom) {
+        this.gameId = gameId;
+        this.round = round;
+        this.topBottom = topBottom;
+    }
+
     public void oneStrike() {
         strike++;
     }
