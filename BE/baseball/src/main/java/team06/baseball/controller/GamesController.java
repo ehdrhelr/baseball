@@ -35,14 +35,9 @@ public class GamesController {
         return ApiResult.succeed(gamesService.getGame(id));
     }
 
-    /**
-     * 게임 시작은 게임id == 1, home 팀 marvel 선택 기준으로 진행한다.
-     * 게임이 시작되면 먼저 이닝이 추가된다.
-     *
-     * @return
-     */
     @GetMapping("/{id}/start")
     public ApiResult<GameStartResponseDto> startGame(@PathVariable Long id) {
+        gamesService.resetDatabase();
         return ApiResult.succeed(gamesService.startGame(id));
     }
 

@@ -1,5 +1,6 @@
 package team06.baseball.repository;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import team06.baseball.domain.Offense;
@@ -22,4 +23,8 @@ public interface OffenseRepository extends CrudRepository<Offense, Long> {
 
     @Query("SELECT on_turn FROM baseball.offense WHERE player_id = :playerId ORDER BY id DESC LIMIT 1")
     Optional<Boolean> findBeforeOnTurnByPlayerId(Long playerId);
+
+    @Modifying
+    @Query("DELETE FROM offense")
+    void deletaAllData();
 }

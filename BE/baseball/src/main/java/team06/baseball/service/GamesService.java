@@ -60,12 +60,6 @@ public class GamesService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * 1회초 away팀 공격 home팀 수비를 가정
-     *
-     * @param id
-     * @return
-     */
     public GameStartResponseDto startGame(Long id) {
         Inning inning = inningsRepository.save(new Inning(id));
         Game game = gamesRepository.findById(id)
@@ -122,5 +116,14 @@ public class GamesService {
                     , beforeOnTurn);
             offenseRepository.save(offense);
         }
+    }
+
+    public void resetDatabase() {
+        gamesRepository.safeUpdateOff();
+        defenseRepository.deleteAllData();
+        gamesRepository.safeUpdateOff();
+        offenseRepository.deletaAllData();
+        gamesRepository.safeUpdateOff();
+        inningsRepository.deleteAllData();
     }
 }

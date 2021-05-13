@@ -1,5 +1,6 @@
 package team06.baseball.repository;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import team06.baseball.domain.Defense;
@@ -13,4 +14,8 @@ public interface DefenseRepository extends CrudRepository<Defense, Long> {
 
     @Query("SELECT pitch FROM baseball.defense WHERE player_id = :playerId ORDER BY id DESC LIMIT 1")
     Optional<Integer> findBeforePitchByPlayerId(Long playerId);
+
+    @Modifying
+    @Query("DELETE FROM defense")
+    void deleteAllData();
 }
