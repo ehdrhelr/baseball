@@ -91,6 +91,7 @@ team-06 (default)
 [5월 10일](https://github.com/ehdrhelr/baseball/wiki/5월-10일-전체-회의) | [5월 10일](https://github.com/ehdrhelr/baseball/wiki/5월-10일-iOS-회의록)
 [5월 11일](https://github.com/ehdrhelr/baseball/wiki/5월-11일-전체-회의록)| [5월 11일](https://github.com/ehdrhelr/baseball/wiki/5월-11일-iOS-회의록) 
 [5월 12일](https://github.com/ehdrhelr/baseball/wiki/5월-12일-전체-회의록)| [5월 12일](https://github.com/ehdrhelr/baseball/wiki/5월-12일-iOS-회의록)
+[5월 14일](https://github.com/ehdrhelr/baseball/wiki/5월-14일-전체-회의록)||
 
 
 ### [팀 Wiki](https://github.com/ehdrhelr/baseball/wiki)
